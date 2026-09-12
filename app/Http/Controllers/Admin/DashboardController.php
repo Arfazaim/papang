@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
+use App\Models\Skill;
+use App\Models\ContactMessage;
+use App\Models\Experience;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,10 +19,11 @@ class DashboardController extends Controller
     {
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
-                'totalProjects' => 0,
-                'totalSkills' => 0,
-                'totalMessages' => 0,
-                'totalExperiences' => 0,
+                'totalProjects' => Project::count(),
+                'totalSkills' => Skill::count(),
+                'totalMessages' => ContactMessage::count(),
+                'totalExperiences' => Experience::count(),
+                'unreadMessages' => ContactMessage::where('is_read', false)->count(),
             ],
         ]);
     }

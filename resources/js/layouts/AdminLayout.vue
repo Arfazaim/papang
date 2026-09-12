@@ -3,21 +3,35 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import {
+    LayoutDashboard,
+    Folder,
+    Zap,
+    Briefcase,
+    GraduationCap,
+    Award,
+    Mail,
+    Image as ImageIcon,
+    Settings,
+    Menu,
+} from '@lucide/vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
 const isSidebarOpen = ref(true);
 
 const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: 'dashboard' },
-    { name: 'Projects', href: '/admin/projects', icon: 'folder' },
-    { name: 'Skills', href: '/admin/skills', icon: 'zap' },
-    { name: 'Experiences', href: '/admin/experiences', icon: 'briefcase' },
-    { name: 'Educations', href: '/admin/educations', icon: 'graduation' },
-    { name: 'Certificates', href: '/admin/certificates', icon: 'award' },
-    { name: 'Messages', href: '/admin/messages', icon: 'mail' },
-    { name: 'Media', href: '/admin/media', icon: 'image' },
-    { name: 'Settings', href: '/admin/settings', icon: 'settings' },
+    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: 'Projects', href: '/admin/projects', icon: Folder },
+    { name: 'Categories', href: '/admin/project-categories', icon: Folder },
+    { name: 'Technologies', href: '/admin/technologies', icon: Zap },
+    { name: 'Skills', href: '/admin/skills', icon: Zap },
+    { name: 'Experiences', href: '/admin/experiences', icon: Briefcase },
+    { name: 'Educations', href: '/admin/educations', icon: GraduationCap },
+    { name: 'Certificates', href: '/admin/certificates', icon: Award },
+    { name: 'Messages', href: '/admin/messages', icon: Mail },
+    { name: 'Media', href: '/admin/media', icon: ImageIcon },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
 function isActive(href: string): boolean {
@@ -35,11 +49,7 @@ function isActive(href: string): boolean {
         <header class="sticky top-0 z-50 border-b border-border bg-background">
             <div class="flex h-14 items-center gap-4 px-4 lg:px-6">
                 <Button variant="ghost" size="icon" class="lg:hidden" @click="isSidebarOpen = !isSidebarOpen">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="4" x2="20" y1="12" y2="12" />
-                        <line x1="4" x2="20" y1="6" y2="6" />
-                        <line x1="4" x2="20" y1="18" y2="18" />
-                    </svg>
+                    <Menu class="h-5 w-5" />
                 </Button>
 
                 <Link href="/admin" class="text-lg font-bold tracking-tight">ARFA.DEV</Link>
@@ -67,9 +77,10 @@ function isActive(href: string): boolean {
                         v-for="item in navigation"
                         :key="item.name"
                         :href="item.href"
-                        class="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
+                        class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
                         :class="isActive(item.href) ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'"
                     >
+                        <component :is="item.icon" class="h-4 w-4" />
                         {{ item.name }}
                     </Link>
                 </nav>

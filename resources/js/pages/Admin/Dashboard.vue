@@ -17,6 +17,7 @@ defineProps<{
         totalSkills: number;
         totalMessages: number;
         totalExperiences: number;
+        unreadMessages: number;
     };
 }>();
 </script>
@@ -62,14 +63,17 @@ defineProps<{
             </Card>
 
             <Card>
-                <CardHeader class="pb-2">
+                <CardHeader class="pb-2 flex flex-row items-center justify-between">
                     <CardDescription>Messages</CardDescription>
+                    <span v-if="stats.unreadMessages > 0" class="flex h-6 w-6 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+                        {{ stats.unreadMessages }}
+                    </span>
+                </CardHeader>
+                <CardContent>
                     <CardTitle class="text-3xl">
                         {{ stats.totalMessages }}
                     </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-xs text-muted-foreground mt-2">
                         Contact form submissions
                     </p>
                 </CardContent>
