@@ -14,7 +14,7 @@ const props = defineProps<{
         name: string;
         category_name: string;
         icon: string | null;
-        level: number;
+        level: string;
         description: string | null;
         is_featured: boolean;
         sort_order: number;
@@ -31,7 +31,7 @@ const form = useForm({
     name: props.skill?.name ?? '',
     category_name: props.skill?.category_name ?? '',
     icon: props.skill?.icon ?? '',
-    level: props.skill?.level ?? 50,
+    level: props.skill?.level ?? 'Intermediate',
     description: props.skill?.description ?? '',
     is_featured: props.skill?.is_featured ?? false,
     sort_order: props.skill?.sort_order ?? 0,
@@ -59,62 +59,133 @@ function submit() {
             </Button>
         </div>
 
-        <div class="rounded-md border bg-card p-6 shadow-sm">
+        <div class="bg-card rounded-md border p-6 shadow-sm">
             <form @submit.prevent="submit" class="space-y-6">
                 <div class="grid gap-6 md:grid-cols-2">
                     <div class="space-y-2">
                         <Label for="name">Skill Name</Label>
                         <Input id="name" v-model="form.name" required />
-                        <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
+                        <p
+                            v-if="form.errors.name"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.name }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
                         <Label for="category_name">Category</Label>
                         <!-- Using datalist for category autocomplete while allowing new categories -->
-                        <Input id="category_name" list="categories" v-model="form.category_name" required placeholder="Select or type a new category" />
+                        <Input
+                            id="category_name"
+                            list="categories"
+                            v-model="form.category_name"
+                            required
+                            placeholder="Select or type a new category"
+                        />
                         <datalist id="categories">
-                            <option v-for="cat in categories" :key="cat.id" :value="cat.name" />
+                            <option
+                                v-for="cat in categories"
+                                :key="cat.id"
+                                :value="cat.name"
+                            />
                         </datalist>
-                        <p v-if="form.errors.category_name" class="text-sm text-destructive">{{ form.errors.category_name }}</p>
+                        <p
+                            v-if="form.errors.category_name"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.category_name }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="level">Proficiency Level (0-100)</Label>
-                        <div class="flex items-center gap-4">
-                            <Input id="level" type="range" min="0" max="100" v-model="form.level" class="flex-1" />
-                            <span class="w-12 text-center border rounded-md py-1">{{ form.level }}</span>
-                        </div>
-                        <p v-if="form.errors.level" class="text-sm text-destructive">{{ form.errors.level }}</p>
+                        <Label for="level">Proficiency Level</Label>
+                        <select
+                            id="level"
+                            v-model="form.level"
+                            class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-10 w-full items-center justify-between rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            required
+                        >
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                        <p
+                            v-if="form.errors.level"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.level }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="icon">Icon Class (e.g. 'fa-brands fa-laravel')</Label>
+                        <Label for="icon"
+                            >Icon Class (e.g. 'fa-brands fa-laravel')</Label
+                        >
                         <Input id="icon" v-model="form.icon" />
-                        <p v-if="form.errors.icon" class="text-sm text-destructive">{{ form.errors.icon }}</p>
+                        <p
+                            v-if="form.errors.icon"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.icon }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="description">Description (Optional)</Label>
-                    <Textarea id="description" v-model="form.description" rows="3" />
-                    <p v-if="form.errors.description" class="text-sm text-destructive">{{ form.errors.description }}</p>
+                    <Textarea
+                        id="description"
+                        v-model="form.description"
+                        rows="3"
+                    />
+                    <p
+                        v-if="form.errors.description"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.description }}
+                    </p>
                 </div>
-                
+
                 <div class="grid gap-6 md:grid-cols-2">
-                    <div class="space-y-2 max-w-[200px]">
+                    <div class="max-w-[200px] space-y-2">
                         <Label for="sort_order">Sort Order</Label>
-                        <Input id="sort_order" type="number" v-model="form.sort_order" />
-                        <p v-if="form.errors.sort_order" class="text-sm text-destructive">{{ form.errors.sort_order }}</p>
+                        <Input
+                            id="sort_order"
+                            type="number"
+                            v-model="form.sort_order"
+                        />
+                        <p
+                            v-if="form.errors.sort_order"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.sort_order }}
+                        </p>
                     </div>
 
                     <div class="flex items-center space-x-2 pt-6">
-                        <input type="checkbox" id="is_featured" v-model="form.is_featured" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
-                        <Label for="is_featured" class="font-normal cursor-pointer">Featured Skill</Label>
-                        <p v-if="form.errors.is_featured" class="text-sm text-destructive">{{ form.errors.is_featured }}</p>
+                        <input
+                            type="checkbox"
+                            id="is_featured"
+                            v-model="form.is_featured"
+                            class="text-primary focus:ring-primary h-4 w-4 rounded border-gray-300"
+                        />
+                        <Label
+                            for="is_featured"
+                            class="cursor-pointer font-normal"
+                            >Featured Skill</Label
+                        >
+                        <p
+                            v-if="form.errors.is_featured"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.is_featured }}
+                        </p>
                     </div>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t">
+                <div class="flex justify-end border-t pt-4">
                     <Button type="submit" :disabled="form.processing">
                         {{ form.processing ? 'Saving...' : 'Save Skill' }}
                     </Button>

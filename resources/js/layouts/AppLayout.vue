@@ -31,19 +31,27 @@ function isActive(href: string): boolean {
 </script>
 
 <template>
-    <div class="min-h-screen bg-background">
-        <header class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
+    <div class="bg-background min-h-screen">
+        <header
+            class="border-border bg-background/80 sticky top-0 z-50 border-b backdrop-blur-sm"
+        >
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
-                    <Link href="/" class="text-xl font-bold tracking-tight">ARFA.DEV</Link>
+                    <Link href="/" class="text-xl font-bold tracking-tight"
+                        >ARFA.DEV</Link
+                    >
 
                     <nav class="hidden items-center gap-1 md:flex">
                         <Link
                             v-for="item in navigation"
                             :key="item.name"
                             :href="item.href"
-                            class="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-                            :class="isActive(item.href) ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'"
+                            class="hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                            :class="
+                                isActive(item.href)
+                                    ? 'bg-accent text-accent-foreground'
+                                    : 'text-muted-foreground'
+                            "
                         >
                             {{ item.name }}
                         </Link>
@@ -60,8 +68,22 @@ function isActive(href: string): boolean {
 
                     <Sheet v-model:open="isMobileMenuOpen">
                         <SheetTrigger as-child>
-                            <Button variant="ghost" size="icon" class="md:hidden">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                class="md:hidden"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
                                     <line x1="4" x2="20" y1="12" y2="12" />
                                     <line x1="4" x2="20" y1="6" y2="6" />
                                     <line x1="4" x2="20" y1="18" y2="18" />
@@ -70,23 +92,31 @@ function isActive(href: string): boolean {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" class="w-72">
-                            <SheetTitle class="text-lg font-bold">Navigation</SheetTitle>
-                            <SheetDescription class="sr-only">Site navigation menu</SheetDescription>
+                            <SheetTitle class="text-lg font-bold"
+                                >Navigation</SheetTitle
+                            >
+                            <SheetDescription class="sr-only"
+                                >Site navigation menu</SheetDescription
+                            >
                             <nav class="mt-6 flex flex-col gap-1">
                                 <Link
                                     v-for="item in navigation"
                                     :key="item.name"
                                     :href="item.href"
-                                    class="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
-                                    :class="isActive(item.href) ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'"
+                                    class="hover:bg-accent rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                                    :class="
+                                        isActive(item.href)
+                                            ? 'bg-accent text-accent-foreground'
+                                            : 'text-muted-foreground'
+                                    "
                                     @click="isMobileMenuOpen = false"
                                 >
                                     {{ item.name }}
                                 </Link>
-                                <div class="my-2 border-t border-border" />
+                                <div class="border-border my-2 border-t" />
                                 <Link
                                     :href="user ? '/admin' : '/login'"
-                                    class="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent"
+                                    class="text-muted-foreground hover:bg-accent rounded-md px-3 py-2 text-sm font-medium transition-colors"
                                     @click="isMobileMenuOpen = false"
                                 >
                                     {{ user ? 'Admin Dashboard' : 'Login' }}
@@ -102,14 +132,22 @@ function isActive(href: string): boolean {
             <slot />
         </main>
 
-        <footer class="border-t border-border bg-background">
+        <footer class="border-border bg-background border-t">
             <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-                    <p class="text-sm text-muted-foreground">
-                        &copy; {{ new Date().getFullYear() }} ARFA.DEV. All rights reserved.
+                <div
+                    class="flex flex-col items-center justify-between gap-4 md:flex-row"
+                >
+                    <p class="text-muted-foreground text-sm">
+                        &copy; {{ new Date().getFullYear() }} ARFA.DEV. All
+                        rights reserved.
                     </p>
                     <div class="flex items-center gap-4">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-muted-foreground transition-colors hover:text-foreground">
+                        <a
+                            href="https://github.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-muted-foreground hover:text-foreground transition-colors"
+                        >
                             GitHub
                         </a>
                     </div>

@@ -42,7 +42,7 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Manage your portfolio projects
                     </p>
                 </CardContent>
@@ -56,16 +56,21 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Technologies &amp; competencies
                     </p>
                 </CardContent>
             </Card>
 
             <Card>
-                <CardHeader class="pb-2 flex flex-row items-center justify-between">
+                <CardHeader
+                    class="flex flex-row items-center justify-between pb-2"
+                >
                     <CardDescription>Messages</CardDescription>
-                    <span v-if="stats.unreadMessages > 0" class="flex h-6 w-6 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+                    <span
+                        v-if="stats.unreadMessages > 0"
+                        class="bg-destructive text-destructive-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs"
+                    >
                         {{ stats.unreadMessages }}
                     </span>
                 </CardHeader>
@@ -73,7 +78,7 @@ defineProps<{
                     <CardTitle class="text-3xl">
                         {{ stats.totalMessages }}
                     </CardTitle>
-                    <p class="text-xs text-muted-foreground mt-2">
+                    <p class="text-muted-foreground mt-2 text-xs">
                         Contact form submissions
                     </p>
                 </CardContent>
@@ -87,7 +92,7 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Work &amp; organization history
                     </p>
                 </CardContent>

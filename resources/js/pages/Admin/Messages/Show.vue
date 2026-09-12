@@ -36,7 +36,9 @@ function formatDate(date: string) {
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">View Message</h1>
-                <p class="text-muted-foreground">From: {{ message.name }} ({{ message.email }})</p>
+                <p class="text-muted-foreground">
+                    From: {{ message.name }} ({{ message.email }})
+                </p>
             </div>
             <div class="flex items-center gap-2">
                 <Link href="/admin/messages">
@@ -46,19 +48,25 @@ function formatDate(date: string) {
             </div>
         </div>
 
-        <div class="rounded-md border bg-card text-card-foreground shadow-sm">
+        <div class="bg-card text-card-foreground rounded-md border shadow-sm">
             <div class="p-6">
-                <div class="flex items-center justify-between mb-4 border-b pb-4">
+                <div
+                    class="mb-4 flex items-center justify-between border-b pb-4"
+                >
                     <div>
-                        <h2 class="text-lg font-semibold">{{ message.subject }}</h2>
-                        <div class="text-sm text-muted-foreground mt-1">Received: {{ formatDate(message.created_at) }}</div>
+                        <h2 class="text-lg font-semibold">
+                            {{ message.subject }}
+                        </h2>
+                        <div class="text-muted-foreground mt-1 text-sm">
+                            Received: {{ formatDate(message.created_at) }}
+                        </div>
                     </div>
                     <a :href="`mailto:${message.email}`">
                         <Button>Reply via Email</Button>
                     </a>
                 </div>
-                
-                <div class="whitespace-pre-wrap text-sm leading-relaxed mt-6">
+
+                <div class="mt-6 text-sm leading-relaxed whitespace-pre-wrap">
                     {{ message.message }}
                 </div>
             </div>

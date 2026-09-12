@@ -60,8 +60,12 @@ function destroy(id: number) {
                 </TableHeader>
                 <TableBody>
                     <TableRow v-for="tech in technologies" :key="tech.id">
-                        <TableCell class="font-medium flex items-center gap-2">
-                            <span v-if="tech.color" class="w-3 h-3 rounded-full" :style="{ backgroundColor: tech.color }"></span>
+                        <TableCell class="flex items-center gap-2 font-medium">
+                            <span
+                                v-if="tech.color"
+                                class="h-3 w-3 rounded-full"
+                                :style="{ backgroundColor: tech.color }"
+                            ></span>
                             {{ tech.name }}
                         </TableCell>
                         <TableCell>{{ tech.slug }}</TableCell>
@@ -69,15 +73,27 @@ function destroy(id: number) {
                         <TableCell>{{ tech.projects_count }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
-                                <Link :href="`/admin/technologies/${tech.id}/edit`">
-                                    <Button variant="outline" size="sm">Edit</Button>
+                                <Link
+                                    :href="`/admin/technologies/${tech.id}/edit`"
+                                >
+                                    <Button variant="outline" size="sm"
+                                        >Edit</Button
+                                    >
                                 </Link>
-                                <Button variant="destructive" size="sm" @click="destroy(tech.id)">Delete</Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    @click="destroy(tech.id)"
+                                    >Delete</Button
+                                >
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="technologies.length === 0">
-                        <TableCell colspan="5" class="text-center py-6 text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground py-6 text-center"
+                        >
                             No technologies found.
                         </TableCell>
                     </TableRow>

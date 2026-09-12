@@ -2,7 +2,14 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { Plus, Pencil, Trash2 } from '@lucide/vue';
 import { format, parseISO } from 'date-fns';
 
@@ -46,7 +53,7 @@ function formatDate(dateString: string | null) {
             </Button>
         </div>
 
-        <div class="rounded-md border bg-card">
+        <div class="bg-card rounded-md border">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -59,25 +66,39 @@ function formatDate(dateString: string | null) {
                 </TableHeader>
                 <TableBody>
                     <TableRow v-for="exp in experiences" :key="exp.id">
-                        <TableCell class="font-medium">{{ exp.organization }}</TableCell>
+                        <TableCell class="font-medium">{{
+                            exp.organization
+                        }}</TableCell>
                         <TableCell>{{ exp.position }}</TableCell>
-                        <TableCell>{{ formatDate(exp.start_date) }} - {{ formatDate(exp.end_date) }}</TableCell>
+                        <TableCell
+                            >{{ formatDate(exp.start_date) }} -
+                            {{ formatDate(exp.end_date) }}</TableCell
+                        >
                         <TableCell>{{ exp.sort_order }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
                                 <Button variant="outline" size="icon" as-child>
-                                    <Link :href="`/admin/experiences/${exp.id}/edit`">
+                                    <Link
+                                        :href="`/admin/experiences/${exp.id}/edit`"
+                                    >
                                         <Pencil class="h-4 w-4" />
                                     </Link>
                                 </Button>
-                                <Button variant="destructive" size="icon" @click="deleteExperience(exp.id)">
+                                <Button
+                                    variant="destructive"
+                                    size="icon"
+                                    @click="deleteExperience(exp.id)"
+                                >
                                     <Trash2 class="h-4 w-4" />
                                 </Button>
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="experiences.length === 0">
-                        <TableCell colspan="5" class="h-24 text-center text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground h-24 text-center"
+                        >
                             No experiences found.
                         </TableCell>
                     </TableRow>

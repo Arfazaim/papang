@@ -28,7 +28,10 @@ const form = useForm({
 
 function generateSlug() {
     if (!isEditing && form.name) {
-        form.slug = form.name.toLowerCase().replace(/[\s_]+/g, '-').replace(/[^\w-]+/g, '');
+        form.slug = form.name
+            .toLowerCase()
+            .replace(/[\s_]+/g, '-')
+            .replace(/[^\w-]+/g, '');
     }
 }
 
@@ -47,9 +50,15 @@ function submit() {
 
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight">{{ isEditing ? 'Edit Category' : 'Create Category' }}</h1>
+                <h1 class="text-2xl font-bold tracking-tight">
+                    {{ isEditing ? 'Edit Category' : 'Create Category' }}
+                </h1>
                 <p class="text-muted-foreground">
-                    {{ isEditing ? 'Update the details of the category.' : 'Add a new category for your projects.' }}
+                    {{
+                        isEditing
+                            ? 'Update the details of the category.'
+                            : 'Add a new category for your projects.'
+                    }}
                 </p>
             </div>
             <Link href="/admin/project-categories">
@@ -61,26 +70,50 @@ function submit() {
             <form @submit.prevent="submit" class="space-y-6">
                 <div class="space-y-2">
                     <Label for="name">Name</Label>
-                    <Input id="name" v-model="form.name" @input="generateSlug" required />
-                    <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
+                    <Input
+                        id="name"
+                        v-model="form.name"
+                        @input="generateSlug"
+                        required
+                    />
+                    <p v-if="form.errors.name" class="text-destructive text-sm">
+                        {{ form.errors.name }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="slug">Slug</Label>
                     <Input id="slug" v-model="form.slug" required />
-                    <p v-if="form.errors.slug" class="text-sm text-destructive">{{ form.errors.slug }}</p>
+                    <p v-if="form.errors.slug" class="text-destructive text-sm">
+                        {{ form.errors.slug }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="description">Description (Optional)</Label>
                     <Input id="description" v-model="form.description" />
-                    <p v-if="form.errors.description" class="text-sm text-destructive">{{ form.errors.description }}</p>
+                    <p
+                        v-if="form.errors.description"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.description }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="sort_order">Sort Order</Label>
-                    <Input id="sort_order" type="number" v-model="form.sort_order" required />
-                    <p v-if="form.errors.sort_order" class="text-sm text-destructive">{{ form.errors.sort_order }}</p>
+                    <Input
+                        id="sort_order"
+                        type="number"
+                        v-model="form.sort_order"
+                        required
+                    />
+                    <p
+                        v-if="form.errors.sort_order"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.sort_order }}
+                    </p>
                 </div>
 
                 <div class="flex items-center gap-4">

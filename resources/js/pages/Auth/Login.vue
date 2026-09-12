@@ -54,7 +54,7 @@ defineProps<{
                             required
                             autofocus
                         />
-                        <p v-if="errors.email" class="text-sm text-destructive">
+                        <p v-if="errors.email" class="text-destructive text-sm">
                             {{ errors.email }}
                         </p>
                     </div>
@@ -64,7 +64,7 @@ defineProps<{
                             <Label for="password">Password</Label>
                             <Link
                                 href="/forgot-password"
-                                class="text-sm text-muted-foreground hover:text-foreground"
+                                class="text-muted-foreground hover:text-foreground text-sm"
                             >
                                 Forgot password?
                             </Link>
@@ -75,7 +75,10 @@ defineProps<{
                             type="password"
                             required
                         />
-                        <p v-if="errors.password" class="text-sm text-destructive">
+                        <p
+                            v-if="errors.password"
+                            class="text-destructive text-sm"
+                        >
                             {{ errors.password }}
                         </p>
                     </div>
@@ -85,7 +88,7 @@ defineProps<{
                             id="remember"
                             name="remember"
                             type="checkbox"
-                            class="rounded border-input"
+                            class="border-input rounded"
                         />
                         <Label for="remember" class="text-sm font-normal">
                             Remember me

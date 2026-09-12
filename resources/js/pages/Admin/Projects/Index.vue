@@ -64,45 +64,80 @@ function destroy(id: number) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="project in projects.data" :key="project.id">
+                    <TableRow
+                        v-for="project in projects.data"
+                        :key="project.id"
+                    >
                         <TableCell class="font-medium">
                             <div class="flex items-center gap-2">
                                 {{ project.title }}
-                                <Badge v-if="project.is_featured" variant="secondary">Featured</Badge>
+                                <Badge
+                                    v-if="project.is_featured"
+                                    variant="secondary"
+                                    >Featured</Badge
+                                >
                             </div>
                         </TableCell>
-                        <TableCell>{{ project.category?.name || 'Uncategorized' }}</TableCell>
+                        <TableCell>{{
+                            project.category?.name || 'Uncategorized'
+                        }}</TableCell>
                         <TableCell>
-                            <Badge :variant="project.status === 'published' ? 'default' : 'outline'">
+                            <Badge
+                                :variant="
+                                    project.status === 'published'
+                                        ? 'default'
+                                        : 'outline'
+                                "
+                            >
                                 {{ project.status }}
                             </Badge>
                         </TableCell>
                         <TableCell>{{ project.technologies_count }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
-                                <Link :href="`/admin/projects/${project.id}/edit`">
-                                    <Button variant="outline" size="sm">Edit</Button>
+                                <Link
+                                    :href="`/admin/projects/${project.id}/edit`"
+                                >
+                                    <Button variant="outline" size="sm"
+                                        >Edit</Button
+                                    >
                                 </Link>
-                                <Button variant="destructive" size="sm" @click="destroy(project.id)">Delete</Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    @click="destroy(project.id)"
+                                    >Delete</Button
+                                >
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="projects.data.length === 0">
-                        <TableCell colspan="5" class="text-center py-6 text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground py-6 text-center"
+                        >
                             No projects found.
                         </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
         </div>
-        
+
         <!-- Very basic pagination, should use proper component later -->
         <div class="mt-4 flex gap-1" v-if="projects.links.length > 3">
             <template v-for="(link, k) in projects.links" :key="k">
                 <Link v-if="link.url" :href="link.url">
-                    <Button :variant="link.active ? 'default' : 'outline'" size="sm" v-html="link.label"></Button>
+                    <Button
+                        :variant="link.active ? 'default' : 'outline'"
+                        size="sm"
+                        v-html="link.label"
+                    ></Button>
                 </Link>
-                <span v-else class="px-3 py-2 text-sm text-muted-foreground" v-html="link.label"></span>
+                <span
+                    v-else
+                    class="text-muted-foreground px-3 py-2 text-sm"
+                    v-html="link.label"
+                ></span>
             </template>
         </div>
     </div>

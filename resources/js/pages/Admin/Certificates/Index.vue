@@ -2,7 +2,14 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { Plus, Pencil, Trash2, ExternalLink } from '@lucide/vue';
 import { format, parseISO } from 'date-fns';
 
@@ -45,7 +52,7 @@ function formatDate(dateString: string) {
             </Button>
         </div>
 
-        <div class="rounded-md border bg-card">
+        <div class="bg-card rounded-md border">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -61,7 +68,12 @@ function formatDate(dateString: string) {
                         <TableCell class="font-medium">
                             <div class="flex items-center gap-2">
                                 {{ cert.name }}
-                                <a v-if="cert.credential_url" :href="cert.credential_url" target="_blank" class="text-muted-foreground hover:text-primary">
+                                <a
+                                    v-if="cert.credential_url"
+                                    :href="cert.credential_url"
+                                    target="_blank"
+                                    class="text-muted-foreground hover:text-primary"
+                                >
                                     <ExternalLink class="h-3 w-3" />
                                 </a>
                             </div>
@@ -72,18 +84,27 @@ function formatDate(dateString: string) {
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
                                 <Button variant="outline" size="icon" as-child>
-                                    <Link :href="`/admin/certificates/${cert.id}/edit`">
+                                    <Link
+                                        :href="`/admin/certificates/${cert.id}/edit`"
+                                    >
                                         <Pencil class="h-4 w-4" />
                                     </Link>
                                 </Button>
-                                <Button variant="destructive" size="icon" @click="deleteCertificate(cert.id)">
+                                <Button
+                                    variant="destructive"
+                                    size="icon"
+                                    @click="deleteCertificate(cert.id)"
+                                >
                                     <Trash2 class="h-4 w-4" />
                                 </Button>
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="certificates.length === 0">
-                        <TableCell colspan="5" class="h-24 text-center text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground h-24 text-center"
+                        >
                             No certificates found.
                         </TableCell>
                     </TableRow>

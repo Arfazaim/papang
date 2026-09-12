@@ -47,7 +47,9 @@ function formatDate(date: string) {
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">Messages</h1>
-                <p class="text-muted-foreground">View and manage contact inquiries.</p>
+                <p class="text-muted-foreground">
+                    View and manage contact inquiries.
+                </p>
             </div>
         </div>
 
@@ -63,47 +65,79 @@ function formatDate(date: string) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="message in messages.data" :key="message.id" :class="{ 'bg-muted/30 font-medium': !message.is_read }">
+                    <TableRow
+                        v-for="message in messages.data"
+                        :key="message.id"
+                        :class="{ 'bg-muted/30 font-medium': !message.is_read }"
+                    >
                         <TableCell>
-                            <Badge :variant="message.is_read ? 'outline' : 'default'">
+                            <Badge
+                                :variant="
+                                    message.is_read ? 'outline' : 'default'
+                                "
+                            >
                                 {{ message.is_read ? 'Read' : 'New' }}
                             </Badge>
                         </TableCell>
                         <TableCell>
                             <div>{{ message.name }}</div>
-                            <div class="text-sm text-muted-foreground">{{ message.email }}</div>
+                            <div class="text-muted-foreground text-sm">
+                                {{ message.email }}
+                            </div>
                         </TableCell>
                         <TableCell>{{ message.subject }}</TableCell>
-                        <TableCell>{{ formatDate(message.created_at) }}</TableCell>
+                        <TableCell>{{
+                            formatDate(message.created_at)
+                        }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
                                 <Link :href="`/admin/messages/${message.id}`">
-                                    <Button variant="outline" size="sm">View</Button>
+                                    <Button variant="outline" size="sm"
+                                        >View</Button
+                                    >
                                 </Link>
-                                <Button variant="destructive" size="sm" @click="destroy(message.id)">Delete</Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    @click="destroy(message.id)"
+                                    >Delete</Button
+                                >
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="messages.data.length === 0">
-                        <TableCell colspan="5" class="text-center py-6 text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground py-6 text-center"
+                        >
                             No messages found.
                         </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
         </div>
-        
+
         <!-- Pagination (Basic) -->
-        <div v-if="messages.links.length > 3" class="mt-4 flex items-center justify-center gap-1">
+        <div
+            v-if="messages.links.length > 3"
+            class="mt-4 flex items-center justify-center gap-1"
+        >
             <template v-for="(link, key) in messages.links" :key="key">
                 <Link
                     v-if="link.url"
                     :href="link.url"
-                    class="px-3 py-1 border rounded text-sm hover:bg-muted"
-                    :class="{ 'bg-primary text-primary-foreground hover:bg-primary': link.active }"
+                    class="hover:bg-muted rounded border px-3 py-1 text-sm"
+                    :class="{
+                        'bg-primary text-primary-foreground hover:bg-primary':
+                            link.active,
+                    }"
                     v-html="link.label"
                 />
-                <span v-else class="px-3 py-1 border rounded text-sm text-muted-foreground" v-html="link.label"></span>
+                <span
+                    v-else
+                    class="text-muted-foreground rounded border px-3 py-1 text-sm"
+                    v-html="link.label"
+                ></span>
             </template>
         </div>
     </div>

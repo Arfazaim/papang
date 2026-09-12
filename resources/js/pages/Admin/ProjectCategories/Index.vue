@@ -37,7 +37,9 @@ function destroy(id: number) {
 
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight">Project Categories</h1>
+                <h1 class="text-2xl font-bold tracking-tight">
+                    Project Categories
+                </h1>
                 <p class="text-muted-foreground">
                     Manage categories for your projects.
                 </p>
@@ -60,21 +62,35 @@ function destroy(id: number) {
                 </TableHeader>
                 <TableBody>
                     <TableRow v-for="category in categories" :key="category.id">
-                        <TableCell class="font-medium">{{ category.name }}</TableCell>
+                        <TableCell class="font-medium">{{
+                            category.name
+                        }}</TableCell>
                         <TableCell>{{ category.slug }}</TableCell>
                         <TableCell>{{ category.sort_order }}</TableCell>
                         <TableCell>{{ category.projects_count }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
-                                <Link :href="`/admin/project-categories/${category.id}/edit`">
-                                    <Button variant="outline" size="sm">Edit</Button>
+                                <Link
+                                    :href="`/admin/project-categories/${category.id}/edit`"
+                                >
+                                    <Button variant="outline" size="sm"
+                                        >Edit</Button
+                                    >
                                 </Link>
-                                <Button variant="destructive" size="sm" @click="destroy(category.id)">Delete</Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    @click="destroy(category.id)"
+                                    >Delete</Button
+                                >
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="categories.length === 0">
-                        <TableCell colspan="5" class="text-center py-6 text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground py-6 text-center"
+                        >
                             No categories found.
                         </TableCell>
                     </TableRow>

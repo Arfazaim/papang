@@ -24,7 +24,9 @@ const isEditing = !!props.certificate;
 const form = useForm({
     name: props.certificate?.name ?? '',
     issuer: props.certificate?.issuer ?? '',
-    issue_date: props.certificate?.issue_date ? props.certificate.issue_date.split('T')[0] : '',
+    issue_date: props.certificate?.issue_date
+        ? props.certificate.issue_date.split('T')[0]
+        : '',
     credential_id: props.certificate?.credential_id ?? '',
     credential_url: props.certificate?.credential_url ?? '',
     sort_order: props.certificate?.sort_order ?? 0,
@@ -52,47 +54,97 @@ function submit() {
             </Button>
         </div>
 
-        <div class="rounded-md border bg-card p-6 shadow-sm">
+        <div class="bg-card rounded-md border p-6 shadow-sm">
             <form @submit.prevent="submit" class="space-y-6">
                 <div class="grid gap-6 md:grid-cols-2">
                     <div class="space-y-2 md:col-span-2">
                         <Label for="name">Certificate Name</Label>
                         <Input id="name" v-model="form.name" required />
-                        <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
+                        <p
+                            v-if="form.errors.name"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.name }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
                         <Label for="issuer">Issuing Organization</Label>
                         <Input id="issuer" v-model="form.issuer" required />
-                        <p v-if="form.errors.issuer" class="text-sm text-destructive">{{ form.errors.issuer }}</p>
+                        <p
+                            v-if="form.errors.issuer"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.issuer }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
                         <Label for="issue_date">Issue Date</Label>
-                        <Input id="issue_date" type="date" v-model="form.issue_date" required />
-                        <p v-if="form.errors.issue_date" class="text-sm text-destructive">{{ form.errors.issue_date }}</p>
+                        <Input
+                            id="issue_date"
+                            type="date"
+                            v-model="form.issue_date"
+                            required
+                        />
+                        <p
+                            v-if="form.errors.issue_date"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.issue_date }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="credential_id">Credential ID (Optional)</Label>
-                        <Input id="credential_id" v-model="form.credential_id" />
-                        <p v-if="form.errors.credential_id" class="text-sm text-destructive">{{ form.errors.credential_id }}</p>
+                        <Label for="credential_id"
+                            >Credential ID (Optional)</Label
+                        >
+                        <Input
+                            id="credential_id"
+                            v-model="form.credential_id"
+                        />
+                        <p
+                            v-if="form.errors.credential_id"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.credential_id }}
+                        </p>
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="credential_url">Credential URL (Optional)</Label>
-                        <Input id="credential_url" type="url" v-model="form.credential_url" />
-                        <p v-if="form.errors.credential_url" class="text-sm text-destructive">{{ form.errors.credential_url }}</p>
+                        <Label for="credential_url"
+                            >Credential URL (Optional)</Label
+                        >
+                        <Input
+                            id="credential_url"
+                            type="url"
+                            v-model="form.credential_url"
+                        />
+                        <p
+                            v-if="form.errors.credential_url"
+                            class="text-destructive text-sm"
+                        >
+                            {{ form.errors.credential_url }}
+                        </p>
                     </div>
                 </div>
-                
-                <div class="space-y-2 max-w-[200px]">
+
+                <div class="max-w-[200px] space-y-2">
                     <Label for="sort_order">Sort Order</Label>
-                    <Input id="sort_order" type="number" v-model="form.sort_order" />
-                    <p v-if="form.errors.sort_order" class="text-sm text-destructive">{{ form.errors.sort_order }}</p>
+                    <Input
+                        id="sort_order"
+                        type="number"
+                        v-model="form.sort_order"
+                    />
+                    <p
+                        v-if="form.errors.sort_order"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.sort_order }}
+                    </p>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t">
+                <div class="flex justify-end border-t pt-4">
                     <Button type="submit" :disabled="form.processing">
                         {{ form.processing ? 'Saving...' : 'Save Certificate' }}
                     </Button>

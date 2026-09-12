@@ -28,7 +28,10 @@ const form = useForm({
 
 function generateSlug() {
     if (!isEditing && form.name) {
-        form.slug = form.name.toLowerCase().replace(/[\s_]+/g, '-').replace(/[^\w-]+/g, '');
+        form.slug = form.name
+            .toLowerCase()
+            .replace(/[\s_]+/g, '-')
+            .replace(/[^\w-]+/g, '');
     }
 }
 
@@ -47,9 +50,15 @@ function submit() {
 
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight">{{ isEditing ? 'Edit Technology' : 'Create Technology' }}</h1>
+                <h1 class="text-2xl font-bold tracking-tight">
+                    {{ isEditing ? 'Edit Technology' : 'Create Technology' }}
+                </h1>
                 <p class="text-muted-foreground">
-                    {{ isEditing ? 'Update the details of the technology.' : 'Add a new technology used in your projects.' }}
+                    {{
+                        isEditing
+                            ? 'Update the details of the technology.'
+                            : 'Add a new technology used in your projects.'
+                    }}
                 </p>
             </div>
             <Link href="/admin/technologies">
@@ -61,29 +70,56 @@ function submit() {
             <form @submit.prevent="submit" class="space-y-6">
                 <div class="space-y-2">
                     <Label for="name">Name</Label>
-                    <Input id="name" v-model="form.name" @input="generateSlug" required />
-                    <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
+                    <Input
+                        id="name"
+                        v-model="form.name"
+                        @input="generateSlug"
+                        required
+                    />
+                    <p v-if="form.errors.name" class="text-destructive text-sm">
+                        {{ form.errors.name }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="slug">Slug</Label>
                     <Input id="slug" v-model="form.slug" required />
-                    <p v-if="form.errors.slug" class="text-sm text-destructive">{{ form.errors.slug }}</p>
+                    <p v-if="form.errors.slug" class="text-destructive text-sm">
+                        {{ form.errors.slug }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="icon">Icon (Optional, e.g., SVG path or class)</Label>
+                    <Label for="icon"
+                        >Icon (Optional, e.g., SVG path or class)</Label
+                    >
                     <Input id="icon" v-model="form.icon" />
-                    <p v-if="form.errors.icon" class="text-sm text-destructive">{{ form.errors.icon }}</p>
+                    <p v-if="form.errors.icon" class="text-destructive text-sm">
+                        {{ form.errors.icon }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="color">Color (Optional Hex code)</Label>
                     <div class="flex items-center gap-2">
-                        <Input type="color" id="color-picker" v-model="form.color" class="w-12 h-10 p-1" />
-                        <Input id="color" v-model="form.color" placeholder="#000000" />
+                        <Input
+                            type="color"
+                            id="color-picker"
+                            v-model="form.color"
+                            class="h-10 w-12 p-1"
+                        />
+                        <Input
+                            id="color"
+                            v-model="form.color"
+                            placeholder="#000000"
+                        />
                     </div>
-                    <p v-if="form.errors.color" class="text-sm text-destructive">{{ form.errors.color }}</p>
+                    <p
+                        v-if="form.errors.color"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.color }}
+                    </p>
                 </div>
 
                 <div class="flex items-center gap-4">

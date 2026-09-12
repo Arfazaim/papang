@@ -2,7 +2,14 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { Plus, Pencil, Trash2, Star } from '@lucide/vue';
 
 defineOptions({ layout: AdminLayout });
@@ -12,7 +19,7 @@ const props = defineProps<{
         id: number;
         name: string;
         category_name: string;
-        level: number;
+        level: string;
         is_featured: boolean;
         sort_order: number;
     }>;
@@ -40,7 +47,7 @@ function deleteSkill(id: number) {
             </Button>
         </div>
 
-        <div class="rounded-md border bg-card">
+        <div class="bg-card rounded-md border">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -56,34 +63,45 @@ function deleteSkill(id: number) {
                         <TableCell class="font-medium">
                             <div class="flex items-center gap-2">
                                 {{ skill.name }}
-                                <Star v-if="skill.is_featured" class="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <Star
+                                    v-if="skill.is_featured"
+                                    class="h-3 w-3 fill-yellow-400 text-yellow-400"
+                                />
                             </div>
                         </TableCell>
                         <TableCell>{{ skill.category_name }}</TableCell>
                         <TableCell>
-                            <div class="flex items-center gap-2">
-                                <div class="h-2 w-24 overflow-hidden rounded-full bg-secondary">
-                                    <div class="h-full bg-primary" :style="{ width: `${skill.level}%` }"></div>
-                                </div>
-                                <span class="text-xs text-muted-foreground">{{ skill.level }}%</span>
-                            </div>
+                            <span
+                                class="focus:ring-ring bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex items-center rounded-full border border-transparent px-2.5 py-0.5 text-xs font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                            >
+                                {{ skill.level }}
+                            </span>
                         </TableCell>
                         <TableCell>{{ skill.sort_order }}</TableCell>
                         <TableCell class="text-right">
                             <div class="flex justify-end gap-2">
                                 <Button variant="outline" size="icon" as-child>
-                                    <Link :href="`/admin/skills/${skill.id}/edit`">
+                                    <Link
+                                        :href="`/admin/skills/${skill.id}/edit`"
+                                    >
                                         <Pencil class="h-4 w-4" />
                                     </Link>
                                 </Button>
-                                <Button variant="destructive" size="icon" @click="deleteSkill(skill.id)">
+                                <Button
+                                    variant="destructive"
+                                    size="icon"
+                                    @click="deleteSkill(skill.id)"
+                                >
                                     <Trash2 class="h-4 w-4" />
                                 </Button>
                             </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-if="skills.length === 0">
-                        <TableCell colspan="5" class="h-24 text-center text-muted-foreground">
+                        <TableCell
+                            colspan="5"
+                            class="text-muted-foreground h-24 text-center"
+                        >
                             No skills found.
                         </TableCell>
                     </TableRow>

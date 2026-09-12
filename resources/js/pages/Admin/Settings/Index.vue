@@ -21,7 +21,7 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(route('admin.settings.store'), {
+    form.post('/admin/settings', {
         preserveScroll: true,
     });
 }
@@ -35,35 +35,74 @@ function submit() {
             <h1 class="text-3xl font-bold tracking-tight">Site Settings</h1>
         </div>
 
-        <div class="max-w-2xl rounded-xl border bg-card p-6 shadow-sm">
+        <div class="bg-card max-w-2xl rounded-xl border p-6 shadow-sm">
             <form @submit.prevent="submit" class="space-y-6">
-                
                 <div class="space-y-2">
                     <Label for="site_name">Site Name</Label>
-                    <Input id="site_name" v-model="form.site_name" placeholder="e.g. My Portfolio" />
-                    <p v-if="form.errors.site_name" class="text-sm text-destructive">{{ form.errors.site_name }}</p>
+                    <Input
+                        id="site_name"
+                        v-model="form.site_name"
+                        placeholder="e.g. My Portfolio"
+                    />
+                    <p
+                        v-if="form.errors.site_name"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.site_name }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="site_description">Site Description</Label>
-                    <Textarea id="site_description" v-model="form.site_description" placeholder="A short description of your site" rows="3" />
-                    <p class="text-xs text-muted-foreground">Used for the hero section and SEO meta description.</p>
-                    <p v-if="form.errors.site_description" class="text-sm text-destructive">{{ form.errors.site_description }}</p>
+                    <Textarea
+                        id="site_description"
+                        v-model="form.site_description"
+                        placeholder="A short description of your site"
+                        rows="3"
+                    />
+                    <p class="text-muted-foreground text-xs">
+                        Used for the hero section and SEO meta description.
+                    </p>
+                    <p
+                        v-if="form.errors.site_description"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.site_description }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="contact_email">Primary Contact Email</Label>
-                    <Input id="contact_email" type="email" v-model="form.contact_email" placeholder="e.g. hello@example.com" />
-                    <p v-if="form.errors.contact_email" class="text-sm text-destructive">{{ form.errors.contact_email }}</p>
+                    <Input
+                        id="contact_email"
+                        type="email"
+                        v-model="form.contact_email"
+                        placeholder="e.g. hello@example.com"
+                    />
+                    <p
+                        v-if="form.errors.contact_email"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.contact_email }}
+                    </p>
                 </div>
 
                 <div class="space-y-2">
                     <Label for="seo_keywords">SEO Keywords</Label>
-                    <Input id="seo_keywords" v-model="form.seo_keywords" placeholder="e.g. developer, portfolio, laravel" />
-                    <p v-if="form.errors.seo_keywords" class="text-sm text-destructive">{{ form.errors.seo_keywords }}</p>
+                    <Input
+                        id="seo_keywords"
+                        v-model="form.seo_keywords"
+                        placeholder="e.g. developer, portfolio, laravel"
+                    />
+                    <p
+                        v-if="form.errors.seo_keywords"
+                        class="text-destructive text-sm"
+                    >
+                        {{ form.errors.seo_keywords }}
+                    </p>
                 </div>
 
-                <div class="flex justify-end pt-4 border-t">
+                <div class="flex justify-end border-t pt-4">
                     <Button type="submit" :disabled="form.processing">
                         <Save class="mr-2 h-4 w-4" />
                         {{ form.processing ? 'Saving...' : 'Save Settings' }}

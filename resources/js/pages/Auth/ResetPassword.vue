@@ -49,7 +49,7 @@ defineProps<{
                             :value="email"
                             required
                         />
-                        <p v-if="errors.email" class="text-sm text-destructive">
+                        <p v-if="errors.email" class="text-destructive text-sm">
                             {{ errors.email }}
                         </p>
                     </div>
@@ -63,13 +63,18 @@ defineProps<{
                             required
                             autofocus
                         />
-                        <p v-if="errors.password" class="text-sm text-destructive">
+                        <p
+                            v-if="errors.password"
+                            class="text-destructive text-sm"
+                        >
                             {{ errors.password }}
                         </p>
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="password_confirmation">Confirm Password</Label>
+                        <Label for="password_confirmation"
+                            >Confirm Password</Label
+                        >
                         <Input
                             id="password_confirmation"
                             name="password_confirmation"
