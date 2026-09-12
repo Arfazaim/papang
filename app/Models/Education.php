@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Database\Factories\EducationFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+#[Fillable(['institution', 'program', 'description', 'start_date', 'end_date', 'sort_order'])]
+class Education extends Model
+{
+    /** @use HasFactory<EducationFactory> */
+    use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
+    }
+}
