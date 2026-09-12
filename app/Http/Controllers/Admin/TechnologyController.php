@@ -12,9 +12,9 @@ class TechnologyController extends Controller
     public function index()
     {
         $technologies = Technology::withCount('projects')->orderBy('name')->get();
-        
+
         return Inertia::render('Admin/Technologies/Index', [
-            'technologies' => $technologies
+            'technologies' => $technologies,
         ]);
     }
 
@@ -40,7 +40,7 @@ class TechnologyController extends Controller
     public function edit(Technology $technology)
     {
         return Inertia::render('Admin/Technologies/Form', [
-            'technology' => $technology
+            'technology' => $technology,
         ]);
     }
 
@@ -48,7 +48,7 @@ class TechnologyController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:technologies,slug,' . $technology->id,
+            'slug' => 'required|string|max:255|unique:technologies,slug,'.$technology->id,
             'icon' => 'nullable|string|max:255',
             'color' => 'nullable|string|max:255',
         ]);
@@ -61,6 +61,7 @@ class TechnologyController extends Controller
     public function destroy(Technology $technology)
     {
         $technology->delete();
+
         return redirect()->route('admin.technologies.index')->with('success', 'Technology deleted successfully.');
     }
 }

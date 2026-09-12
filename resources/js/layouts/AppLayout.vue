@@ -15,21 +15,18 @@ const user = computed(() => page.props.auth?.user);
 const isMobileMenuOpen = ref(false);
 
 const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Projects', href: '/projects' },
-    { name: 'Skills', href: '/skills' },
-    { name: 'Experience', href: '/experience' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Home', href: '/#home' },
+    { name: 'Skills', href: '/#skills' },
+    { name: 'Resume', href: '/#resume' },
+    { name: 'Projects', href: '/#projects' },
+    { name: 'Contact', href: '/#contact' },
 ];
 
 function isActive(href: string): boolean {
     const currentPath = page.url;
-    if (href === '/') {
-        return currentPath === '/';
-    }
-    return currentPath.startsWith(href);
+    // Basic fallback for anchor links; client-side observers are better for scroll spy.
+    if (href === '/#home') return currentPath === '/';
+    return false;
 }
 </script>
 

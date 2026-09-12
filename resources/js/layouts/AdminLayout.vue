@@ -11,9 +11,10 @@ import {
     GraduationCap,
     Award,
     Mail,
-    Image as ImageIcon,
+    ImageIcon,
     Settings,
     Menu,
+    Link2,
 } from '@lucide/vue';
 
 const page = usePage();
@@ -31,6 +32,7 @@ const navigation = [
     { name: 'Certificates', href: '/admin/certificates', icon: Award },
     { name: 'Messages', href: '/admin/messages', icon: Mail },
     { name: 'Media', href: '/admin/media', icon: ImageIcon },
+    { name: 'Social Links', href: '/admin/social-links', icon: Link2 },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

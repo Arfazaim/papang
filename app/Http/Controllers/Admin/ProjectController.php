@@ -14,9 +14,9 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::with(['category'])->withCount('technologies')->orderBy('sort_order')->orderBy('created_at', 'desc')->paginate(10);
-        
+
         return Inertia::render('Admin/Projects/Index', [
-            'projects' => $projects
+            'projects' => $projects,
         ]);
     }
 
@@ -68,7 +68,7 @@ class ProjectController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:projects,slug,' . $project->id,
+            'slug' => 'required|string|max:255|unique:projects,slug,'.$project->id,
             'category_id' => 'nullable|exists:project_categories,id',
             'short_description' => 'required|string',
             'full_description' => 'nullable|string',
@@ -94,6 +94,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
+
         return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
     }
 }

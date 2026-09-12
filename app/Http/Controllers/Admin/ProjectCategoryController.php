@@ -12,9 +12,9 @@ class ProjectCategoryController extends Controller
     public function index()
     {
         $categories = ProjectCategory::withCount('projects')->orderBy('sort_order')->get();
-        
+
         return Inertia::render('Admin/ProjectCategories/Index', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -40,7 +40,7 @@ class ProjectCategoryController extends Controller
     public function edit(ProjectCategory $projectCategory)
     {
         return Inertia::render('Admin/ProjectCategories/Form', [
-            'category' => $projectCategory
+            'category' => $projectCategory,
         ]);
     }
 
@@ -48,7 +48,7 @@ class ProjectCategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:project_categories,slug,' . $projectCategory->id,
+            'slug' => 'required|string|max:255|unique:project_categories,slug,'.$projectCategory->id,
             'description' => 'nullable|string',
             'sort_order' => 'integer',
         ]);
@@ -61,6 +61,7 @@ class ProjectCategoryController extends Controller
     public function destroy(ProjectCategory $projectCategory)
     {
         $projectCategory->delete();
+
         return redirect()->route('admin.project-categories.index')->with('success', 'Category deleted successfully.');
     }
 }
