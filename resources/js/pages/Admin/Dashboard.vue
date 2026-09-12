@@ -41,7 +41,7 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Manage your portfolio projects
                     </p>
                 </CardContent>
@@ -55,7 +55,7 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Technologies &amp; competencies
                     </p>
                 </CardContent>
@@ -69,7 +69,7 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Contact form submissions
                     </p>
                 </CardContent>
@@ -83,7 +83,7 @@ defineProps<{
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-muted-foreground text-xs">
                         Work &amp; organization history
                     </p>
                 </CardContent>

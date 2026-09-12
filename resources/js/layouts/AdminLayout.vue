@@ -30,25 +30,51 @@ function isActive(href: string): boolean {
 </script>
 
 <template>
-    <div class="min-h-screen bg-background">
+    <div class="bg-background min-h-screen">
         <!-- Top Bar -->
-        <header class="sticky top-0 z-50 border-b border-border bg-background">
+        <header class="border-border bg-background sticky top-0 z-50 border-b">
             <div class="flex h-14 items-center gap-4 px-4 lg:px-6">
-                <Button variant="ghost" size="icon" class="lg:hidden" @click="isSidebarOpen = !isSidebarOpen">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    class="lg:hidden"
+                    @click="isSidebarOpen = !isSidebarOpen"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
                         <line x1="4" x2="20" y1="12" y2="12" />
                         <line x1="4" x2="20" y1="6" y2="6" />
                         <line x1="4" x2="20" y1="18" y2="18" />
                     </svg>
                 </Button>
 
-                <Link href="/admin" class="text-lg font-bold tracking-tight">ARFA.DEV</Link>
-                <span class="rounded bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">Admin</span>
+                <Link href="/admin" class="text-lg font-bold tracking-tight"
+                    >ARFA.DEV</Link
+                >
+                <span
+                    class="bg-primary text-primary-foreground rounded px-2 py-0.5 text-xs font-medium"
+                    >Admin</span
+                >
 
                 <div class="ml-auto flex items-center gap-2">
-                    <Link href="/" class="text-sm text-muted-foreground hover:text-foreground">View Site</Link>
+                    <Link
+                        href="/"
+                        class="text-muted-foreground hover:text-foreground text-sm"
+                        >View Site</Link
+                    >
                     <Separator orientation="vertical" class="h-6" />
-                    <span class="text-sm text-muted-foreground">{{ user?.name }}</span>
+                    <span class="text-muted-foreground text-sm">{{
+                        user?.name
+                    }}</span>
                     <Link href="/logout" method="post" as="button">
                         <Button variant="ghost" size="sm">Logout</Button>
                     </Link>
@@ -59,7 +85,7 @@ function isActive(href: string): boolean {
         <div class="flex">
             <!-- Sidebar -->
             <aside
-                class="fixed inset-y-0 left-0 z-40 mt-14 w-64 border-r border-border bg-background transition-transform lg:translate-x-0"
+                class="border-border bg-background fixed inset-y-0 left-0 z-40 mt-14 w-64 border-r transition-transform lg:translate-x-0"
                 :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             >
                 <nav class="flex flex-col gap-1 p-4">
@@ -67,8 +93,12 @@ function isActive(href: string): boolean {
                         v-for="item in navigation"
                         :key="item.name"
                         :href="item.href"
-                        class="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
-                        :class="isActive(item.href) ? 'bg-accent text-accent-foreground' : 'text-muted-foreground'"
+                        class="hover:bg-accent rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                        :class="
+                            isActive(item.href)
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground'
+                        "
                     >
                         {{ item.name }}
                     </Link>

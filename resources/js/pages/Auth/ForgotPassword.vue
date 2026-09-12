@@ -53,7 +53,7 @@ defineProps<{
                             required
                             autofocus
                         />
-                        <p v-if="errors.email" class="text-sm text-destructive">
+                        <p v-if="errors.email" class="text-destructive text-sm">
                             {{ errors.email }}
                         </p>
                     </div>
@@ -66,7 +66,7 @@ defineProps<{
                 <div class="mt-4 text-center">
                     <Link
                         href="/login"
-                        class="text-sm text-muted-foreground hover:text-foreground"
+                        class="text-muted-foreground hover:text-foreground text-sm"
                     >
                         Back to login
                     </Link>
