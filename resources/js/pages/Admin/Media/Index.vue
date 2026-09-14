@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Button } from '@/components/ui/button';
 import { format, parseISO } from 'date-fns';
@@ -20,8 +21,8 @@ defineProps<{
             alt_text: string | null;
             created_at: string;
             mediable: any;
-            mediable_type: string;
-            mediable_id: number;
+            mediable_type: string | null;
+            mediable_id: number | null;
         }>;
         links: any[];
     };
@@ -50,9 +51,6 @@ function formatSize(bytes: number) {
 function getMediaUrl(path: string) {
     return `/storage/${path}`;
 }
-
-import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 const fileInput = ref<HTMLInputElement | null>(null);
 
@@ -172,10 +170,13 @@ function submitUpload() {
                     <div
                         class="text-muted-foreground mt-1 truncate text-[10px]"
                     >
-                        Attached to:
-                        {{ item.mediable_type.split('\\').pop() }} #{{
-                            item.mediable_id
-                        }}
+                        <template v-if="item.mediable_type">
+                            Attached to:
+                            {{ item.mediable_type.split('\\').pop() }} #{{
+                                item.mediable_id
+                            }}
+                        </template>
+                        <template v-else>Standalone</template>
                     </div>
                 </div>
             </div>

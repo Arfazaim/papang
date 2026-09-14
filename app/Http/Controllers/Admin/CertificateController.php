@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class CertificateController extends Controller
@@ -31,8 +32,13 @@ class CertificateController extends Controller
             'issue_date' => 'required|date',
             'credential_id' => 'nullable|string|max:255',
             'credential_url' => 'nullable|url|max:255',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             'sort_order' => 'integer',
         ]);
+
+        if ($request->hasFile('file')) {
+            $validated['file_path'] = $request->file('file')->store('certificates', 'public');
+        }
 
         Certificate::create($validated);
 
@@ -54,8 +60,16 @@ class CertificateController extends Controller
             'issue_date' => 'required|date',
             'credential_id' => 'nullable|string|max:255',
             'credential_url' => 'nullable|url|max:255',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             'sort_order' => 'integer',
         ]);
+
+        if ($request->hasFile('file')) {
+            if ($certificate->file_path && Storage::disk('public')->exists($certificate->file_path)) {
+                Storage::disk('public')->delete($certificate->file_path);
+            }
+            $validated['file_path'] = $request->file('file')->store('certificates', 'public');
+        }
 
         $certificate->update($validated);
 
@@ -64,6 +78,10 @@ class CertificateController extends Controller
 
     public function destroy(Certificate $certificate)
     {
+        if ($certificate->file_path && Storage::disk('public')->exists($certificate->file_path)) {
+            Storage::disk('public')->delete($certificate->file_path);
+        }
+
         $certificate->delete();
 
         return redirect()->route('admin.certificates.index')->with('success', 'Certificate deleted successfully.');

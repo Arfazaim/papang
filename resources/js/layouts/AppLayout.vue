@@ -2,6 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
+import FlashNotification from '@/components/FlashNotification.vue';
 import {
     Sheet,
     SheetContent,
@@ -32,6 +33,7 @@ function isActive(href: string): boolean {
 
 <template>
     <div class="bg-background min-h-screen">
+        <FlashNotification />
         <header
             class="border-border bg-background/80 sticky top-0 z-50 border-b backdrop-blur-sm"
         >

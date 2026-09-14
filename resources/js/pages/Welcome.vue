@@ -312,7 +312,7 @@ function formatDate(date: string | null) {
                         >
                             <ExternalLink
                                 class="h-6 w-6"
-                                v-if="cert.credential_url"
+                                v-if="cert.file_url || cert.credential_url"
                             />
                             <Briefcase class="h-6 w-6" v-else />
                         </div>
@@ -327,8 +327,8 @@ function formatDate(date: string | null) {
                         >
                             <span>{{ formatDate(cert.issue_date) }}</span>
                             <a
-                                v-if="cert.credential_url"
-                                :href="cert.credential_url"
+                                v-if="cert.file_url || cert.credential_url"
+                                :href="cert.file_url || cert.credential_url"
                                 target="_blank"
                                 class="text-primary inline-flex items-center gap-1 hover:underline"
                             >

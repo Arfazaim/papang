@@ -3,6 +3,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import FlashNotification from '@/components/FlashNotification.vue';
 import {
     LayoutDashboard,
     Folder,
@@ -47,6 +48,7 @@ function isActive(href: string): boolean {
 
 <template>
     <div class="bg-background min-h-screen">
+        <FlashNotification />
         <!-- Top Bar -->
         <header class="border-border bg-background sticky top-0 z-50 border-b">
             <div class="flex h-14 items-center gap-4 px-4 lg:px-6">

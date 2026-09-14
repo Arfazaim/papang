@@ -54,7 +54,7 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])
         Route::resource('messages', MessageController::class)->only(['index', 'show', 'destroy']);
 
         // Media Library
-        Route::resource('media', MediaController::class)->only(['index', 'destroy']);
+        Route::resource('media', MediaController::class)->only(['index', 'store', 'destroy']);
 
         // Settings
         Route::get('settings', [SiteSettingController::class, 'index'])->name('settings.index');
