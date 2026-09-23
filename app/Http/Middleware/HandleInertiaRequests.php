@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SiteSetting;
+use App\Models\SocialLink;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -45,8 +47,8 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
-            'siteSettings' => fn () => \App\Models\SiteSetting::all()->pluck('value', 'key')->toArray(),
-            'socialLinks' => fn () => \App\Models\SocialLink::where('is_active', true)->orderBy('sort_order')->get(),
+            'siteSettings' => fn () => SiteSetting::all()->pluck('value', 'key')->toArray(),
+            'socialLinks' => fn () => SocialLink::where('is_active', true)->orderBy('sort_order')->get(),
         ];
     }
 }

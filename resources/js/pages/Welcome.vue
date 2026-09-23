@@ -1,38 +1,27 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { format, parseISO } from 'date-fns';
-import {
-    ArrowRight,
-    ExternalLink,
-    Briefcase,
-    GraduationCap,
-} from '@lucide/vue';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { onMounted, onUnmounted } from 'vue';
 
-defineOptions({ layout: AppLayout });
+
+defineOptions({ layout: null }); // Disable AppLayout to use MyResume layout
 
 const props = defineProps<{
     settings: Record<string, string>;
-    socialLinks: Array<any>;
+    socialLinks: Array<{
+        id: number;
+        name: string;
+        url: string;
+        icon: string | null;
+        is_active: boolean;
+    }>;
     skills: Record<string, Array<any>>;
     experiences: Array<any>;
     educations: Array<any>;
     certificates: Array<any>;
     featuredProjects: Array<any>;
 }>();
-const siteName = props.settings.site_name || 'My Portfolio';
-const siteDescription =
-    props.settings.site_description ||
-    'A passionate software developer building scalable applications and intuitive user experiences.';
-const seoKeywords =
-    props.settings.seo_keywords || 'portfolio, developer, laravel, vue';
 
-const contactForm = useForm({
+const form = useForm({
     name: '',
     email: '',
     subject: '',
@@ -40,553 +29,267 @@ const contactForm = useForm({
 });
 
 function submitContact() {
-    contactForm.post('/contact', {
+    form.post('/contact', {
         preserveScroll: true,
-        onSuccess: () => contactForm.reset(),
+        onSuccess: () => form.reset(),
     });
 }
 
-function formatDate(date: string | null) {
-    if (!date) return 'Present';
-    return format(parseISO(date), 'MMM yyyy');
+function loadScript(src: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) {
+            resolve();
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => resolve();
+        script.onerror = () => reject();
+        document.body.appendChild(script);
+    });
 }
+
+onMounted(async () => {
+    document.body.classList.add('index-page');
+    
+    const cssFiles = [
+        '/myresume/vendor/bootstrap/css/bootstrap.min.css',
+        '/myresume/vendor/bootstrap-icons/bootstrap-icons.css',
+        '/myresume/vendor/aos/aos.css',
+        '/myresume/vendor/glightbox/css/glightbox.min.css',
+        '/myresume/vendor/swiper/swiper-bundle.min.css',
+        '/myresume/css/main.css'
+   ];
+    
+    cssFiles.forEach(href => {
+        if (!document.querySelector(`link[href="${href}"]`)) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+        }
+    });
+
+    const jsFiles = [
+        '/myresume/vendor/bootstrap/js/bootstrap.bundle.min.js',
+        '/myresume/vendor/aos/aos.js',
+        '/myresume/vendor/typed.js/typed.umd.js',
+        '/myresume/vendor/purecounter/purecounter_vanilla.js',
+        '/myresume/vendor/waypoints/noframework.waypoints.js',
+        '/myresume/vendor/glightbox/js/glightbox.min.js',
+        '/myresume/vendor/imagesloaded/imagesloaded.pkgd.min.js',
+        '/myresume/vendor/isotope-layout/isotope.pkgd.min.js',
+        '/myresume/vendor/swiper/swiper-bundle.min.js',
+        '/myresume/js/main.js'
+    ];
+
+    for (const src of jsFiles) {
+        try {
+            await loadScript(src);
+        } catch (e) {
+            console.error('Failed to load', src);
+        }
+    }
+});
+
+onUnmounted(() => {
+    document.body.classList.remove('index-page');
+});
 </script>
 
 <template>
     <div>
-        <Head :title="siteName">
-            <meta name="description" :content="siteDescription" />
-            <meta name="keywords" :content="seoKeywords" />
-            <meta property="og:title" :content="siteName" />
-            <meta property="og:description" :content="siteDescription" />
-            <meta
-                v-if="settings.og_image"
-                property="og:image"
-                :content="settings.og_image"
-            />
+        <Head>
+            <title>{{ settings.site_name || 'My Portfolio' }}</title>
         </Head>
-        <!-- HERO SECTION -->
-        <section
-            id="home"
-            class="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-20 text-center"
-        >
-            <Badge
-                v-if="settings.available_for_freelance !== '0'"
-                class="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-6 px-4 py-1 text-sm"
-                variant="outline"
-            >
-                {{ settings.freelance_badge_text || 'Available for Freelance' }}
-            </Badge>
-            <h1 class="mb-6 text-5xl font-extrabold tracking-tight sm:text-7xl">
-                Hi, I'm
-                <span class="text-primary">{{
-                    settings.site_name || 'Zaaim'
-                }}</span>
-            </h1>
-            <p
-                class="text-muted-foreground mx-auto mb-10 max-w-2xl text-xl leading-relaxed"
-            >
-                {{
-                    settings.site_description ||
-                    'A Fullstack Developer passionate about building excellent software that improves the lives of those around me.'
-                }}
-            </p>
-            <div class="flex gap-4">
-                <a href="#projects">
-                    <Button size="lg" class="h-12 px-8 text-base"
-                        >View Projects <ArrowRight class="ml-2 h-4 w-4"
-                    /></Button>
-                </a>
-                <a href="#contact">
-                    <Button
-                        variant="outline"
-                        size="lg"
-                        class="h-12 px-8 text-base"
-                        >Contact Me</Button
-                    >
-                </a>
-            </div>
 
-            <div class="text-muted-foreground mt-20 flex gap-6">
-                <a
-                    v-for="social in socialLinks"
-                    :key="social.id"
-                    :href="social.url"
-                    target="_blank"
-                    class="hover:text-foreground transition-colors"
-                >
-                    <span
-                        v-if="social.icon"
-                        class="inline-block h-6 w-6"
-                        aria-hidden="true"
-                    >
-                        <img
-                            :src="`/icons/${social.platform || social.name.toLowerCase()}.svg`"
-                            :alt="social.name"
-                            class="h-6 w-6"
-                            onerror="this.style.display='none'"
-                        />
-                    </span>
-                    <span v-else>{{ social.name }}</span>
-                </a>
-            </div>
-        </section>
+        <header id="header" class="header d-flex flex-column justify-content-center">
+            <i class="header-toggle d-xl-none bi bi-list"></i>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i><span>Home</span></a></li>
+                    <li><a href="#about"><i class="bi bi-person navicon"></i><span>About</span></a></li>
+                    <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i><span>Resume</span></a></li>
+                    <li><a href="#portfolio"><i class="bi bi-images navicon"></i><span>Portfolio</span></a></li>
+                    <li><a href="#contact"><i class="bi bi-envelope navicon"></i><span>Contact</span></a></li>
+                    <li v-if="$page.props.auth.user"><Link href="/admin"><i class="bi bi-speedometer2 navicon"></i><span>Dashboard</span></Link></li>
+                    <li v-else><Link href="/login"><i class="bi bi-box-arrow-in-right navicon"></i><span>Login</span></Link></li>
+                </ul>
+            </nav>
+        </header>
 
-        <!-- SKILLS SECTION -->
-        <section id="skills" class="bg-muted/30 py-20">
-            <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-16 text-center">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
-                        Technical Skills
-                    </h2>
-                    <p class="text-muted-foreground mt-4 text-lg">
-                        Technologies I work with daily
-                    </p>
-                </div>
-
-                <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-                    <div
-                        v-for="(skillGroup, category) in skills"
-                        :key="category"
-                        class="space-y-6"
-                    >
-                        <h3 class="border-b pb-2 text-xl font-semibold">
-                            {{ category }}
-                        </h3>
-                        <div class="flex flex-wrap gap-3">
-                            <Badge
-                                v-for="skill in skillGroup"
-                                :key="skill.id"
-                                variant="secondary"
-                                class="bg-background flex items-center gap-2 border px-4 py-2 text-sm"
-                            >
-                                <span
-                                    v-if="skill.icon"
-                                    class="h-4 w-4"
-                                    aria-hidden="true"
-                                >
-                                    <img
-                                        :src="`/icons/skills/${skill.icon}`"
-                                        :alt="skill.name"
-                                        class="h-4 w-4"
-                                        onerror="this.style.display='none'"
-                                    />
-                                </span>
-                                {{ skill.name }}
-                            </Badge>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- RESUME SECTION -->
-        <section id="resume" class="py-24">
-            <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-16 text-center">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
-                        Experience & Education
-                    </h2>
-                    <p class="text-muted-foreground mt-4 text-lg">
-                        My professional journey
-                    </p>
-                </div>
-
-                <div class="grid gap-16 md:grid-cols-2">
-                    <!-- Experiences -->
-                    <div>
-                        <div
-                            class="mb-8 flex items-center gap-3 text-2xl font-bold"
-                        >
-                            <Briefcase class="text-primary h-6 w-6" />
-                            <h3>Experience</h3>
-                        </div>
-                        <div
-                            class="before:via-border relative space-y-8 before:absolute before:inset-0 before:ml-2 before:h-full before:w-0.5 before:-translate-x-px before:bg-gradient-to-b before:from-transparent before:to-transparent md:before:mx-auto md:before:translate-x-0"
-                        >
-                            <div
-                                v-for="exp in experiences"
-                                :key="exp.id"
-                                class="group is-active relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse"
-                            >
-                                <div
-                                    class="border-background bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-4 shadow md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2"
-                                ></div>
-                                <div
-                                    class="bg-card w-[calc(100%-2rem)] rounded-xl border p-4 shadow-sm md:w-[calc(50%-1.5rem)]"
-                                >
-                                    <div
-                                        class="mb-1 flex items-center justify-between"
-                                    >
-                                        <div
-                                            class="text-foreground text-lg font-semibold"
-                                        >
-                                            {{ exp.position }}
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="text-primary mb-3 text-sm font-medium"
-                                    >
-                                        {{ exp.organization }}
-                                    </div>
-                                    <div
-                                        class="text-muted-foreground mb-4 text-xs"
-                                    >
-                                        {{ formatDate(exp.start_date) }} -
-                                        {{
-                                            !exp.end_date
-                                                ? 'Present'
-                                                : formatDate(exp.end_date)
-                                        }}
-                                    </div>
-                                    <div
-                                        v-if="exp.description"
-                                        class="text-muted-foreground text-sm whitespace-pre-wrap"
-                                    >
-                                        {{ exp.description }}
-                                    </div>
-                                </div>
+        <main class="main">
+            <!-- Hero Section -->
+            <section id="hero" class="hero section light-background">
+                <img src="/myresume/img/hero-bg.jpg" alt="">
+                <div class="container" data-aos="zoom-out">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-9">
+                            <h2>{{ settings.hero_title || 'Hello!' }}</h2>
+                            <p>{{ settings.hero_subtitle || 'I am a Developer' }}</p>
+                            <div class="social-links">
+                                <a v-for="social in socialLinks" :key="social.id" :href="social.url" target="_blank">
+                                    <i :class="['bi', social.icon ? 'bi-' + social.icon : 'bi-globe']"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Education -->
-                    <div>
-                        <div
-                            class="mb-8 flex items-center gap-3 text-2xl font-bold"
-                        >
-                            <GraduationCap class="text-primary h-6 w-6" />
-                            <h3>Education</h3>
+            <!-- About Section -->
+            <section id="about" class="about section">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>About</h2>
+                    <p>{{ settings.site_description || 'About Me' }}</p>
+                </div>
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row gy-4 justify-content-center">
+                        <div class="col-lg-4">
+                            <img src="/myresume/img/profile-img.jpg" class="img-fluid" alt="">
                         </div>
-                        <div
-                            class="before:via-border relative space-y-8 before:absolute before:inset-0 before:ml-2 before:h-full before:w-0.5 before:-translate-x-px before:bg-gradient-to-b before:from-transparent before:to-transparent md:before:mx-auto md:before:translate-x-0"
-                        >
-                            <div
-                                v-for="edu in educations"
-                                :key="edu.id"
-                                class="group is-active relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse"
-                            >
-                                <div
-                                    class="border-background bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-4 shadow md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2"
-                                ></div>
-                                <div
-                                    class="bg-card w-[calc(100%-2rem)] rounded-xl border p-4 shadow-sm md:w-[calc(50%-1.5rem)]"
-                                >
-                                    <div
-                                        class="mb-1 flex items-center justify-between"
-                                    >
-                                        <div
-                                            class="text-foreground text-lg font-semibold"
-                                        >
-                                            {{ edu.program }}
+                        <div class="col-lg-8 content">
+                            <h2>{{ settings.site_name || 'My Name' }}</h2>
+                            <p class="fst-italic py-3">Here is a brief summary of my profile and skills.</p>
+                            
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="mb-4">Skills</h3>
+                                    <div class="skills-content skills-animation">
+                                        <div v-for="(categorySkills, categoryName) in skills" :key="categoryName">
+                                            <h5 class="mt-4">{{ categoryName }}</h5>
+                                            <div class="progress" v-for="skill in categorySkills" :key="skill.id">
+                                                <span class="skill"><span>{{ skill.name }}</span> <i class="val">{{ skill.proficiency_percentage }}%</i></span>
+                                                <div class="progress-bar-wrap">
+                                                    <div class="progress-bar" role="progressbar" :aria-valuenow="skill.proficiency_percentage" aria-valuemin="0" aria-valuemax="100" :style="{ width: skill.proficiency_percentage + '%' }"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div
-                                        class="text-primary mb-3 text-sm font-medium"
-                                    >
-                                        {{ edu.institution }}
-                                    </div>
-                                    <div
-                                        class="text-muted-foreground mb-4 text-xs"
-                                    >
-                                        {{ formatDate(edu.start_date) }} -
-                                        {{
-                                            !edu.end_date
-                                                ? 'Present'
-                                                : formatDate(edu.end_date)
-                                        }}
-                                    </div>
-                                    <div
-                                        v-if="edu.description"
-                                        class="text-muted-foreground text-sm whitespace-pre-wrap"
-                                    >
-                                        {{ edu.description }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- CERTIFICATES SECTION -->
-        <section id="certificates" class="py-20">
-            <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-16 text-center">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
-                        Certificates & Awards
-                    </h2>
-                    <p class="text-muted-foreground mt-4 text-lg">
-                        My professional certifications and achievements
-                    </p>
+            <!-- Resume Section -->
+            <section id="resume" class="resume section">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Resume</h2>
+                    <p>My professional experience and education background.</p>
                 </div>
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    <div
-                        v-for="cert in certificates"
-                        :key="cert.id"
-                        class="bg-card flex flex-col rounded-xl border p-6 shadow-sm transition-all hover:shadow-md"
-                    >
-                        <div
-                            class="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-full"
-                        >
-                            <ExternalLink
-                                class="h-6 w-6"
-                                v-if="cert.file_url || cert.credential_url"
-                            />
-                            <Briefcase class="h-6 w-6" v-else />
-                        </div>
-                        <h3 class="mb-2 line-clamp-2 text-xl font-bold">
-                            {{ cert.name }}
-                        </h3>
-                        <p class="text-primary mb-4 text-sm font-medium">
-                            {{ cert.issuer }}
-                        </p>
-                        <div
-                            class="text-muted-foreground mt-auto flex items-center justify-between border-t pt-4 text-sm"
-                        >
-                            <span>{{ formatDate(cert.issue_date) }}</span>
-                            <a
-                                v-if="cert.file_url || cert.credential_url"
-                                :href="cert.file_url || cert.credential_url"
-                                target="_blank"
-                                class="text-primary inline-flex items-center gap-1 hover:underline"
-                            >
-                                View <ExternalLink class="h-3 w-3" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROJECTS SECTION -->
-        <section id="projects" class="bg-muted/30 py-24">
-            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-16 text-center">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
-                        Featured Projects
-                    </h2>
-                    <p class="text-muted-foreground mt-4 text-lg">
-                        Some of my recent work
-                    </p>
-                </div>
-
-                <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    <div
-                        v-for="project in featuredProjects"
-                        :key="project.id"
-                        class="group bg-card flex flex-col overflow-hidden rounded-xl border shadow-sm transition-all hover:shadow-md"
-                    >
-                        <!-- Project Cover -->
-                        <div
-                            class="bg-muted relative aspect-video w-full overflow-hidden"
-                        >
-                            <!-- In a real scenario, use project.media cover image -->
-                            <div
-                                class="from-primary/20 absolute inset-0 z-10 bg-gradient-to-tr to-transparent mix-blend-overlay"
-                            ></div>
-                            <img
-                                v-if="project.cover_image_url"
-                                :src="project.cover_image_url"
-                                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                :alt="project.title"
-                            />
-                            <div
-                                v-else
-                                class="bg-secondary text-secondary-foreground flex h-full w-full items-center justify-center text-sm font-medium"
-                            >
-                                No Image
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <h3 class="resume-title">Education</h3>
+                            <div class="resume-item" v-for="edu in educations" :key="edu.id">
+                                <h4>{{ edu.degree }}</h4>
+                                <h5>{{ edu.start_date ? edu.start_date.substring(0,4) : '' }} - {{ edu.is_current ? 'Present' : (edu.end_date ? edu.end_date.substring(0,4) : 'Present') }}</h5>
+                                <p><em>{{ edu.institution }}</em></p>
+                                <p>{{ edu.description }}</p>
                             </div>
                         </div>
-
-                        <div class="flex flex-1 flex-col p-6">
-                            <Badge variant="outline" class="mb-3 w-fit">{{
-                                project.category?.name || 'Uncategorized'
-                            }}</Badge>
-                            <h3 class="mb-2 text-xl font-bold tracking-tight">
-                                {{ project.title }}
-                            </h3>
-                            <p
-                                class="text-muted-foreground mb-6 line-clamp-3 flex-1 text-sm"
-                            >
-                                {{ project.short_description }}
-                            </p>
-
-                            <div class="mt-auto flex items-center gap-3">
-                                <a
-                                    v-if="project.demo_url"
-                                    :href="project.demo_url"
-                                    target="_blank"
-                                    class="flex-1"
-                                >
-                                    <Button class="w-full" size="sm">
-                                        <ExternalLink class="mr-2 h-4 w-4" />
-                                        Live Demo
-                                    </Button>
-                                </a>
-                                <a
-                                    v-if="project.github_url"
-                                    :href="project.github_url"
-                                    target="_blank"
-                                    :class="
-                                        project.demo_url
-                                            ? 'flex-none'
-                                            : 'flex-1'
-                                    "
-                                >
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        :class="
-                                            project.demo_url ? 'px-3' : 'w-full'
-                                        "
-                                    >
-                                        <svg
-                                            v-if="!project.demo_url"
-                                            class="mr-2 h-4 w-4 fill-current"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                                            />
-                                        </svg>
-                                        <svg
-                                            v-else
-                                            class="h-4 w-4 fill-current"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                                            />
-                                        </svg>
-                                        <span v-if="!project.demo_url"
-                                            >GitHub</span
-                                        >
-                                    </Button>
-                                </a>
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <h3 class="resume-title">Professional Experience</h3>
+                            <div class="resume-item" v-for="exp in experiences" :key="exp.id">
+                                <h4>{{ exp.position }}</h4>
+                                <h5>{{ exp.start_date ? exp.start_date.substring(0,4) : '' }} - {{ exp.is_current ? 'Present' : (exp.end_date ? exp.end_date.substring(0,4) : 'Present') }}</h5>
+                                <p><em>{{ exp.company }}</em></p>
+                                <p>{{ exp.description }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <div v-if="featuredProjects.length > 0" class="mt-12 text-center">
-                    <Link href="/projects">
-                        <Button variant="outline" size="lg">
-                            View All Projects
-                            <ArrowRight class="ml-2 h-4 w-4" />
-                        </Button>
-                    </Link>
+            <!-- Portfolio Section -->
+            <section id="portfolio" class="portfolio section">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Portfolio</h2>
+                    <p>Some of my featured projects.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- CONTACT SECTION -->
-        <section id="contact" class="py-24">
-            <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-16 text-center">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
-                        Get In Touch
-                    </h2>
-                    <p class="text-muted-foreground mt-4 text-lg">
-                        Have a project in mind or just want to say hi?
-                    </p>
-                </div>
-
-                <div class="bg-card rounded-2xl border p-8 shadow-sm">
-                    <div
-                        v-if="contactForm.wasSuccessful"
-                        class="mb-6 rounded-lg bg-green-50 p-4 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                    >
-                        Thank you for your message! I'll get back to you as soon
-                        as possible.
+                <div class="container">
+                    <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+                        <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+                            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app" v-for="project in featuredProjects" :key="project.id">
+                                <img :src="project.cover_image_url || '/myresume/img/masonry-portfolio/masonry-portfolio-1.jpg'" class="img-fluid" alt="">
+                                <div class="portfolio-info">
+                                    <h4>{{ project.title }}</h4>
+                                    <p>{{ project.category ? project.category.name : 'Project' }}</p>
+                                    <Link :href="'/projects/' + project.slug" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></Link>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </section>
 
-                    <form @submit.prevent="submitContact" class="space-y-6">
-                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            <div class="space-y-2">
-                                <Label for="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    v-model="contactForm.name"
-                                    placeholder="John Doe"
-                                    required
-                                />
-                                <p
-                                    v-if="contactForm.errors.name"
-                                    class="text-destructive text-sm"
-                                >
-                                    {{ contactForm.errors.name }}
-                                </p>
-                            </div>
-                            <div class="space-y-2">
-                                <Label for="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    v-model="contactForm.email"
-                                    placeholder="john@example.com"
-                                    required
-                                />
-                                <p
-                                    v-if="contactForm.errors.email"
-                                    class="text-destructive text-sm"
-                                >
-                                    {{ contactForm.errors.email }}
-                                </p>
+            <!-- Contact Section -->
+            <section id="contact" class="contact section">
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Contact</h2>
+                    <p>Feel free to get in touch with me.</p>
+                </div>
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row gy-4">
+                        <div class="col-lg-4">
+                            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+                                <i class="bi bi-envelope flex-shrink-0"></i>
+                                <div>
+                                    <h3>Email Us</h3>
+                                    <p>{{ settings.site_email || 'hello@example.com' }}</p>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="space-y-2">
-                            <Label for="subject">Subject</Label>
-                            <Input
-                                id="subject"
-                                v-model="contactForm.subject"
-                                placeholder="How can I help you?"
-                                required
-                            />
-                            <p
-                                v-if="contactForm.errors.subject"
-                                class="text-destructive text-sm"
-                            >
-                                {{ contactForm.errors.subject }}
-                            </p>
+                        <div class="col-lg-8">
+                            <form @submit.prevent="submitContact" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                                <div class="row gy-4">
+                                    <div class="col-md-6">
+                                        <input v-model="form.name" type="text" name="name" class="form-control" placeholder="Your Name" required>
+                                        <div v-if="form.errors.name" class="text-danger mt-1 small">{{ form.errors.name }}</div>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <input v-model="form.email" type="email" class="form-control" name="email" placeholder="Your Email" required>
+                                        <div v-if="form.errors.email" class="text-danger mt-1 small">{{ form.errors.email }}</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input v-model="form.subject" type="text" class="form-control" name="subject" placeholder="Subject" required>
+                                        <div v-if="form.errors.subject" class="text-danger mt-1 small">{{ form.errors.subject }}</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <textarea v-model="form.message" class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+                                        <div v-if="form.errors.message" class="text-danger mt-1 small">{{ form.errors.message }}</div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <button type="submit" :disabled="form.processing">
+                                            {{ form.processing ? 'Sending...' : 'Send Message' }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="space-y-2">
-                            <Label for="message">Message</Label>
-                            <Textarea
-                                id="message"
-                                v-model="contactForm.message"
-                                placeholder="Your message here..."
-                                rows="6"
-                                required
-                            />
-                            <p
-                                v-if="contactForm.errors.message"
-                                class="text-destructive text-sm"
-                            >
-                                {{ contactForm.errors.message }}
-                            </p>
-                        </div>
-
-                        <Button
-                            type="submit"
-                            class="w-full"
-                            size="lg"
-                            :disabled="contactForm.processing"
-                        >
-                            {{
-                                contactForm.processing
-                                    ? 'Sending...'
-                                    : 'Send Message'
-                            }}
-                        </Button>
-                    </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer id="footer" class="footer position-relative light-background">
+            <div class="container">
+                <h3 class="sitename">{{ settings.site_name || 'My Name' }}</h3>
+                <div class="social-links d-flex justify-content-center">
+                    <a v-for="social in socialLinks" :key="social.id" :href="social.url" target="_blank">
+                        <i :class="['bi', social.icon ? 'bi-' + social.icon : 'bi-globe']"></i>
+                    </a>
+                </div>
+                <div class="container">
+                    <div class="copyright">
+                        <span>Copyright</span> <strong class="px-1 sitename">{{ settings.site_name || 'My Name' }}</strong> <span>All Rights Reserved</span>
+                    </div>
                 </div>
             </div>
-        </section>
+        </footer>
+
+        <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     </div>
 </template>

@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { format, parseISO } from 'date-fns';
-import { ArrowLeft, ExternalLink, Github } from '@lucide/vue';
+import { ArrowLeft, ExternalLink, GitBranch } from '@lucide/vue';
 
 defineOptions({ layout: AppLayout });
 
@@ -92,7 +92,7 @@ const contentSections: Array<{ key: ProjectKey; title: string }> = [
                             <Button size="lg"><ExternalLink class="mr-2 h-4 w-4" />Live Demo</Button>
                         </a>
                         <a v-if="project.github_url" :href="project.github_url" target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" size="lg"><Github class="mr-2 h-4 w-4" />Source Code</Button>
+                            <Button variant="outline" size="lg"><GitBranch class="mr-2 h-4 w-4" />Source Code</Button>
                         </a>
                     </div>
                 </header>
