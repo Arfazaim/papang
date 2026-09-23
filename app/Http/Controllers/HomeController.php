@@ -24,7 +24,7 @@ class HomeController extends Controller
         });
 
         $experiences = Experience::orderBy('start_date', 'desc')->get();
-        $educations = Education::orderBy('start_date', 'desc')->get();
+        $educations = Education::orderBy('sort_order')->orderBy('start_date', 'desc')->get();
         $certificates = Certificate::orderBy('issue_date', 'desc')->get();
 
         $featuredProjects = Project::with(['category', 'technologies'])

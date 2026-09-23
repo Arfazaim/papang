@@ -45,6 +45,8 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'siteSettings' => fn () => \App\Models\SiteSetting::all()->pluck('value', 'key')->toArray(),
+            'socialLinks' => fn () => \App\Models\SocialLink::where('is_active', true)->orderBy('sort_order')->get(),
         ];
     }
 }

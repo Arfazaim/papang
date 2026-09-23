@@ -13,6 +13,15 @@ import {
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
+const siteSettings = computed(
+    () => (page.props.siteSettings as Record<string, string>) || {},
+);
+const socialLinks = computed(
+    () => (page.props.socialLinks as Array<any>) || [],
+);
+const siteName = computed(
+    () => siteSettings.value.site_name || 'My Portfolio',
+);
 const isMobileMenuOpen = ref(false);
 
 const navigation = [
@@ -25,7 +34,6 @@ const navigation = [
 
 function isActive(href: string): boolean {
     const currentPath = page.url;
-    // Basic fallback for anchor links; client-side observers are better for scroll spy.
     if (href === '/#home') return currentPath === '/';
     return false;
 }
@@ -39,9 +47,9 @@ function isActive(href: string): boolean {
         >
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
-                    <Link href="/" class="text-xl font-bold tracking-tight"
-                        >ARFA.DEV</Link
-                    >
+                    <Link href="/" class="text-xl font-bold tracking-tight">{{
+                        siteName
+                    }}</Link>
 
                     <nav class="hidden items-center gap-1 md:flex">
                         <Link
@@ -140,17 +148,19 @@ function isActive(href: string): boolean {
                     class="flex flex-col items-center justify-between gap-4 md:flex-row"
                 >
                     <p class="text-muted-foreground text-sm">
-                        &copy; {{ new Date().getFullYear() }} ARFA.DEV. All
-                        rights reserved.
+                        &copy; {{ new Date().getFullYear() }}
+                        {{ siteName }}. All rights reserved.
                     </p>
                     <div class="flex items-center gap-4">
                         <a
-                            href="https://github.com"
+                            v-for="social in socialLinks"
+                            :key="social.id"
+                            :href="social.url"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="text-muted-foreground hover:text-foreground transition-colors"
                         >
-                            GitHub
+                            {{ social.name }}
                         </a>
                     </div>
                 </div>

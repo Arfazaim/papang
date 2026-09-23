@@ -59,6 +59,11 @@ function formatDate(date: string | null) {
             <meta name="keywords" :content="seoKeywords" />
             <meta property="og:title" :content="siteName" />
             <meta property="og:description" :content="siteDescription" />
+            <meta
+                v-if="settings.og_image"
+                property="og:image"
+                :content="settings.og_image"
+            />
         </Head>
         <!-- HERO SECTION -->
         <section
@@ -66,10 +71,11 @@ function formatDate(date: string | null) {
             class="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-20 text-center"
         >
             <Badge
+                v-if="settings.available_for_freelance !== '0'"
                 class="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 mb-6 px-4 py-1 text-sm"
                 variant="outline"
             >
-                Available for Freelance
+                {{ settings.freelance_badge_text || 'Available for Freelance' }}
             </Badge>
             <h1 class="mb-6 text-5xl font-extrabold tracking-tight sm:text-7xl">
                 Hi, I'm
@@ -111,9 +117,16 @@ function formatDate(date: string | null) {
                 >
                     <span
                         v-if="social.icon"
-                        v-html="social.icon"
-                        class="inline-block h-6 w-6 fill-current"
-                    ></span>
+                        class="inline-block h-6 w-6"
+                        aria-hidden="true"
+                    >
+                        <img
+                            :src="`/icons/${social.platform || social.name.toLowerCase()}.svg`"
+                            :alt="social.name"
+                            class="h-6 w-6"
+                            onerror="this.style.display='none'"
+                        />
+                    </span>
                     <span v-else>{{ social.name }}</span>
                 </a>
             </div>
@@ -149,9 +162,16 @@ function formatDate(date: string | null) {
                             >
                                 <span
                                     v-if="skill.icon"
-                                    v-html="skill.icon"
-                                    class="h-4 w-4 fill-current"
-                                ></span>
+                                    class="h-4 w-4"
+                                    aria-hidden="true"
+                                >
+                                    <img
+                                        :src="`/icons/skills/${skill.icon}`"
+                                        :alt="skill.name"
+                                        class="h-4 w-4"
+                                        onerror="this.style.display='none'"
+                                    />
+                                </span>
                                 {{ skill.name }}
                             </Badge>
                         </div>
@@ -367,10 +387,10 @@ function formatDate(date: string | null) {
                                 class="from-primary/20 absolute inset-0 z-10 bg-gradient-to-tr to-transparent mix-blend-overlay"
                             ></div>
                             <img
-                                v-if="project.cover_image"
-                                :src="project.cover_image"
+                                v-if="project.cover_image_url"
+                                :src="project.cover_image_url"
                                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                alt="Cover"
+                                :alt="project.title"
                             />
                             <div
                                 v-else
@@ -450,6 +470,15 @@ function formatDate(date: string | null) {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div v-if="featuredProjects.length > 0" class="mt-12 text-center">
+                    <Link href="/projects">
+                        <Button variant="outline" size="lg">
+                            View All Projects
+                            <ArrowRight class="ml-2 h-4 w-4" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>

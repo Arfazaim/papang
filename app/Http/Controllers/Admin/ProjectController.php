@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
+use App\Models\ActivityLog;
 use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\Technology;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -28,31 +31,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:projects,slug',
-            'category_id' => 'nullable|exists:project_categories,id',
-            'short_description' => 'required|string',
-            'full_description' => 'nullable|string',
-            'problem' => 'nullable|string',
-            'goals' => 'nullable|string',
-            'features' => 'nullable|string',
-            'architecture' => 'nullable|string',
-            'challenges' => 'nullable|string',
-            'solutions' => 'nullable|string',
-            'lessons_learned' => 'nullable|string',
-            'status' => 'required|in:draft,published,archived',
-            'is_featured' => 'boolean',
-            'demo_url' => 'nullable|url|max:255',
-            'github_url' => 'nullable|url|max:255',
-            'started_at' => 'nullable|date',
-            'completed_at' => 'nullable|date',
-            'sort_order' => 'integer',
-            'technologies' => 'array',
-            'technologies.*' => 'exists:technologies,id',
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('projects', 'public');
+        }
 
         $project = Project::create($validated);
 
@@ -60,7 +45,27 @@ class ProjectController extends Controller
             $project->technologies()->sync($validated['technologies']);
         }
 
+        ActivityLog::create([
+            'user_id' => $request->user()->id,
+            'action' => 'created',
+            'resource_type' => 'Project',
+            'resource_id' => $project->id,
+            'description' => "Created project: {$project->title}",
+        ]);
+
         return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
+    }
+
+    public function show(Project $project)
+    {
+        $project->load(['category', 'technologies', 'media']);
+
+        return Inertia::render('Admin/Projects/Form', [
+            'project' => $project,
+            'categories' => ProjectCategory::orderBy('name')->get(),
+            'technologies' => Technology::orderBy('name')->get(),
+            'readOnly' => true,
+        ]);
     }
 
     public function edit(Project $project)
@@ -74,31 +79,16 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:projects,slug,'.$project->id,
-            'category_id' => 'nullable|exists:project_categories,id',
-            'short_description' => 'required|string',
-            'full_description' => 'nullable|string',
-            'problem' => 'nullable|string',
-            'goals' => 'nullable|string',
-            'features' => 'nullable|string',
-            'architecture' => 'nullable|string',
-            'challenges' => 'nullable|string',
-            'solutions' => 'nullable|string',
-            'lessons_learned' => 'nullable|string',
-            'status' => 'required|in:draft,published,archived',
-            'is_featured' => 'boolean',
-            'demo_url' => 'nullable|url|max:255',
-            'github_url' => 'nullable|url|max:255',
-            'started_at' => 'nullable|date',
-            'completed_at' => 'nullable|date',
-            'sort_order' => 'integer',
-            'technologies' => 'array',
-            'technologies.*' => 'exists:technologies,id',
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('cover_image')) {
+            if ($project->cover_image && Storage::disk('public')->exists($project->cover_image)) {
+                Storage::disk('public')->delete($project->cover_image);
+            }
+            $validated['cover_image'] = $request->file('cover_image')->store('projects', 'public');
+        }
 
         $project->update($validated);
 
@@ -108,12 +98,32 @@ class ProjectController extends Controller
             $project->technologies()->detach();
         }
 
+        ActivityLog::create([
+            'user_id' => $request->user()->id,
+            'action' => 'updated',
+            'resource_type' => 'Project',
+            'resource_id' => $project->id,
+            'description' => "Updated project: {$project->title}",
+        ]);
+
         return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
     }
 
     public function destroy(Project $project)
     {
+        if ($project->cover_image && Storage::disk('public')->exists($project->cover_image)) {
+            Storage::disk('public')->delete($project->cover_image);
+        }
+
         $project->delete();
+
+        ActivityLog::create([
+            'user_id' => request()->user()->id,
+            'action' => 'deleted',
+            'resource_type' => 'Project',
+            'resource_id' => $project->id,
+            'description' => "Deleted project: {$project->title}",
+        ]);
 
         return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
     }
