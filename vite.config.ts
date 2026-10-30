@@ -6,7 +6,7 @@ import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig, lazyPlugins } from 'vite-plus';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
     plugins: lazyPlugins(() => [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.ts'],
@@ -27,9 +27,13 @@ export default defineConfig({
                 },
             },
         }),
-        wayfinder({
-            formVariants: true,
-        }),
+        ...(command === 'serve'
+            ? [
+                  wayfinder({
+                      formVariants: true,
+                  }),
+              ]
+            : []),
     ]),
     server: {
         watch: {
@@ -69,7 +73,11 @@ export default defineConfig({
         ignorePatterns: [
             '.github/**',
             'composer.json',
+            'public/**',
+            'resources/js/actions/**',
             'resources/js/components/ui/*',
+            'resources/js/routes/**',
+            'resources/js/wayfinder/**',
             'resources/views/mail/*',
         ],
         sortTailwindcss: {
@@ -77,4 +85,4 @@ export default defineConfig({
             entryPoint: 'resources/css/app.css',
         },
     },
-});
+}));

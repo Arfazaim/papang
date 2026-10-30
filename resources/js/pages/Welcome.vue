@@ -3,7 +3,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { onMounted, onUnmounted } from 'vue';
 
 
-defineOptions({ layout: null }); // Disable AppLayout to use MyResume layout
+defineOptions({ layout: undefined }); // Disable AppLayout to use MyResume layout
 
 const props = defineProps<{
     settings: Record<string, string>;

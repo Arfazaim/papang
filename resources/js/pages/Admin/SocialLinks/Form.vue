@@ -6,12 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Save } from '@lucide/vue';
-import { AppModelsSocialLink } from '@/actions';
+import type { SocialLink } from '@/types';
 
 defineOptions({ layout: AdminLayout });
 
 const props = defineProps<{
-    link?: AppModelsSocialLink;
+    link?: SocialLink;
 }>();
 
 const isEditing = !!props.link;

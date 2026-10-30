@@ -12,12 +12,12 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2 } from '@lucide/vue';
-import { AppModelsSocialLink } from '@/actions';
+import type { SocialLink } from '@/types';
 
 defineOptions({ layout: AdminLayout });
 
 defineProps<{
-    links: AppModelsSocialLink[];
+    links: SocialLink[];
 }>();
 
 const deleteForm = useForm({});
